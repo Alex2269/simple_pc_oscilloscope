@@ -16,6 +16,19 @@
 3. Зберіть проект:
 > **Примітка:** Можливо, знадобиться підключити додаткові бібліотеки для роботи з COM-портом (`rs232.h`/`rs232.c`).
 
+## Збірка проекту
+
+Для збірки проекту використовуйте Makefile.
+
+Просто виконайте команду в корені проекту:
+
+Це скомпілює всі необхідні файли і створить виконуваний файл (наприклад, `oscilloscope`).
+
+---
+
+Якщо потрібно почистити скомпільовані файли, виконайте:
+Makefile clean
+
 4. Підключіть пристрій STM32 через USB.
 
 ## Як користуватися
@@ -30,7 +43,49 @@
 - [Raylib](https://www.raylib.com/)
 - [rs232](https://github.com/WinterMute/rs232) (для роботи з COM-портом)
 
+---
+
+### Вимоги
+
+- Встановлений компілятор GCC або сумісний
+- Бібліотека raylib (та інші залежності, якщо є)
+
 ## Автор
 
 [Alex2269](https://github.com/Alex2269)
 
+# simple_pc_oscilloscope
+
+A simple PC oscilloscope based on the Raylib library. Uses STM32 "Bluepill" as a signal source.
+
+## Features
+
+- Displays two signal channels from microcontroller
+- Trigger, scaling and offset support
+- Cyrillic support in GUI
+- Graphical interface using Raylib
+
+## Build instructions
+
+1. Install [Raylib](https://www.raylib.com/) for your OS.
+2. Clone the repository:
+3. Build the project:
+> **Note:** You might need to add additional libraries for COM-port support (`rs232.h`/`rs232.c`).
+
+4. Connect your STM32 device via USB.
+
+## Usage
+
+- Select the COM port in the control panel.
+- Click "Connect" to start.
+- Adjust scaling, offset, and trigger for each channel.
+- Press `ESC` to exit.
+
+## Dependencies
+
+- [Raylib](https://www.raylib.com/)
+- [rs232](https://github.com/WinterMute/rs232) (for COM-port communication)
+
+## Author
+
+[Alex2269](https://github.com/Alex2269)
