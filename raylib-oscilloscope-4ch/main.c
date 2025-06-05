@@ -101,6 +101,7 @@ void init_osc_data(OscData *oscData) {
 
 void update_trigger_indices(OscData *oscData) {
     float smoothing_alpha = 0.1f;
+    const int RESET_THRESHOLD = 5; // Кількість кадрів для скидання тригера (~0.08 сек при 60 FPS)
 
     for (int i = 0; i < MAX_CHANNELS; i++) {
         ChannelSettings *ch = &oscData->channels[i];
@@ -116,19 +117,30 @@ void update_trigger_indices(OscData *oscData) {
             int absolute_trigger_index = (oscData->history_index + 1 + found_offset) % HISTORY_SIZE;
 
             if (!ch->trigger_locked) {
+                // Плавне оновлення позиції тригера
                 ch->trigger_index_smooth = smoothing_alpha * absolute_trigger_index + (1.0f - smoothing_alpha) * ch->trigger_index_smooth;
                 ch->trigger_index = (int)(ch->trigger_index_smooth + 0.5f);
 
+                // Перевірка стабільності позиції тригера
                 if (abs(ch->trigger_index - absolute_trigger_index) < 2) {
                     ch->frames_since_trigger++;
                     if (ch->frames_since_trigger > 3) {
-                        ch->trigger_locked = true;
+                        ch->trigger_locked = true;  // Тригер спрацював і заблокувався
+                        ch->frames_since_trigger = 0; // Скидаємо лічильник для наступного циклу
                     }
                 } else {
                     ch->frames_since_trigger = 0;
                 }
+            } else {
+                // Тригер заблокований, рахуємо час до скидання
+                ch->frames_since_trigger++;
+                if (ch->frames_since_trigger > RESET_THRESHOLD) {
+                    ch->trigger_locked = false;   // Розблокуємо тригер для нового спрацювання
+                    ch->frames_since_trigger = 0; // Скидаємо лічильник
+                }
             }
         } else {
+            // Якщо канал не активний або тригер не активний - скидаємо стан
             ch->trigger_locked = false;
             ch->frames_since_trigger = 0;
             ch->trigger_index = 0;
