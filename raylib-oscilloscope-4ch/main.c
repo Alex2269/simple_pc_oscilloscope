@@ -252,27 +252,7 @@ int main(void) {
         int points_right = points_total - points_left;
 
         // generate_test_signals(&oscData, 500, 0.0f);
-
-        for (int i = 0; i < MAX_CHANNELS; i++) {
-            ChannelSettings *ch = &oscData.channels[i];
-            if (ch->active && ch->channel_history != NULL) {
-                draw_channel_signal(
-                    ch->channel_history,
-                    oscData.history_index,
-                    ch->trigger_index,
-                    ch->offset_y,
-                    ch->scale_y,
-                    channel_colors[i],
-                    (float)osc_width,
-                    2.0f,
-                    points_total,
-                    points_left,
-                    points_right,
-                    oscData.trigger_offset_x,
-                    oscData.reverse_signal
-                );
-            }
-        }
+        draw_signal(&oscData, osc_width, 2.0f);
 
         gui_control_panel(&oscData, screenWidth, screenHeight);
 

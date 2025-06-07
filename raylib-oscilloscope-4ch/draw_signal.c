@@ -103,47 +103,46 @@ void draw_signal(OscData *oscData, float osc_width, float lineThickness)
     const int points_total = 500;
     const int history_size = 500;
 
-    // Обчислюємо кількість точок ліворуч від тригера
-    int points_left = (int)(oscData->trigger_offset_x / osc_width * points_total);
-    // Кількість точок праворуч від тригера
-    int points_right = points_total - points_left;
-
     Color channel_colors[MAX_CHANNELS] = { YELLOW, GREEN, RED, BLUE };
 
     for (int i = 0; i < MAX_CHANNELS; i++) {
         ChannelSettings *ch = &oscData->channels[i];
 
-    // Якщо увімкнено режим реверсу сигналу
-    if (oscData->reverse_signal) {
-        int points_to_draw = points_total; // Малюємо весь буфер сигналу
-
-        // Нормалізоване положення тригера відносно ширини осцилографа
-        float trigger_pos_normalized = oscData->trigger_offset_x / osc_width;
-
-        // Зсув у точках відносно загальної кількості точок
-        int offset_points = (int)(trigger_pos_normalized * points_total);
-
-        // Обчислення початкових індексів для малювання сигналів каналів з урахуванням реверсу
-        ch->trigger_index += offset_points % points_total;
-    }
-
         if (ch->active && ch->channel_history != NULL) {
-            float trigger_x_pos = oscData->trigger_offset_x;
-            draw_channel_signal(
-                ch->channel_history,
-                oscData->history_index,
-                ch->trigger_index,
-                ch->offset_y,
-                ch->scale_y,
-                channel_colors[i],
-                osc_width,
-                lineThickness,
-                points_total,
-                points_left,
-                points_right,
-                trigger_x_pos,
-                oscData->reverse_signal
-            );
+        // Якщо увімкнено режим реверсу сигналу
+        if (oscData->reverse_signal) {
+            int points_to_draw = points_total; // Малюємо весь буфер сигналу
+
+            // Нормалізоване положення тригера відносно ширини осцилографа
+            float trigger_pos_normalized = oscData->trigger_offset_x / osc_width;
+
+            // Зсув у точках відносно загальної кількості точок
+            int offset_points = (int)(trigger_pos_normalized * points_total);
+
+            // Обчислення початкових індексів для малювання сигналів каналів з урахуванням реверсу
+            int start_index = (ch->trigger_index + offset_points) % points_total;
+
+            draw_channel_signal(ch->channel_history, oscData->history_index,
+                                start_index,
+                                ch->offset_y, ch->scale_y, channel_colors[i],
+                                osc_width, lineThickness,
+                                points_total, points_to_draw, 0, 0.0f,
+                                // points_total, points_left, points_right, oscData->trigger_offset_x,
+                                oscData->reverse_signal);
+        }
+
+        // Обчислюємо кількість точок ліворуч від тригера
+        int points_left = (int)(oscData->trigger_offset_x / osc_width * points_total);
+        // Кількість точок праворуч від тригера
+        int points_right = points_total - points_left;
+
+        draw_channel_signal(ch->channel_history, oscData->history_index,
+                            ch->trigger_index,
+                            ch->offset_y, ch->scale_y, channel_colors[i],
+                            osc_width, lineThickness,
+                            // points_total, points_left, 0, 0.0f,
+                            points_total, points_left, points_right, oscData->trigger_offset_x,
+                            oscData->reverse_signal);
         }
     }
 }
