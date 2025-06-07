@@ -32,4 +32,4 @@
    git push -u origin main
    git pull
    #******************************************
-
+   git status ; git add . ; git commit -m "$(date "+%Y-%m-%d")" ; git push -u origin main ;  git pull
