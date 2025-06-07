@@ -1,95 +1,134 @@
 // gui_control_panel.c
 
+#include "raylib.h"
+#include "main.h" // для OscData, MAX_CHANNELS
 #include "raygui.h"
 #include "gui_control_panel.h"
 #include <stddef.h>
 #include <stdio.h>
+
+extern int fontSize;
+extern int LineSpacing;
+extern Font font;
 
 void send_command(OscData *data, char* command, size_t buffer_size, int number);
 // void write_usb_device(OscData *data, unsigned char* str);
 void write_usb_device(OscData *data, unsigned char* str, size_t len);
 
 // Функція відображає панель керування параметрами осцилографа
-void gui_control_panel(OscData *oscData, int screenWidth, int screenHeight)
-{
-    int panel_x = screenWidth - 350;
-    int current_y = 5;
-    int W_Controls = 290;
-    int H_Controls = 18;
-    int Vertical_Space = 23;
+// Масив кольорів каналів
+static Color channel_colors[MAX_CHANNELS] = { YELLOW, GREEN, RED, BLUE };
 
-    DrawRectangle(panel_x - 10, 0, screenWidth - (panel_x - 10), screenHeight, (Color){40, 40, 40, 255});
+// Масив кольорів каналів
+// static Color channel_colors[MAX_CHANNELS] = { YELLOW, GREEN, RED, BLUE };
+
+void gui_control_panel(OscData *oscData, int screenWidth, int screenHeight) {
+    // Позиції і розміри панелі
+    int panelX = screenWidth - 350;
+    int panelY = 10;
+    int panelWidth = 340;
+    int panelHeight = screenHeight - 20;
+
+    DrawRectangle(panelX, panelY, panelWidth, panelHeight, Fade(DARKGRAY, 0.9f));
+    DrawRectangleLines(panelX, panelY, panelWidth, panelHeight, GRAY);
+
     GuiSetStyle(DEFAULT, TEXT_SIZE, 20);
 
-    // Вибір активного каналу
-    GuiLabel((Rectangle){panel_x, current_y, W_Controls, H_Controls}, "Select Active Channel:");
-    current_y += Vertical_Space;
+    // Заголовок панелі
+    DrawText("Control Panel", panelX + 10, panelY + 10, 20, WHITE);
 
-    // Кнопки вибору каналу
-    for (int i = 0; i < MAX_CHANNELS; i++)
-    {
-        char label[16];
-        sprintf(label, "Channel %d", i);
-        if (GuiButton((Rectangle){panel_x + i * 70, current_y, 65, 30}, label))
-        {
+    // Кнопки вибору активного каналу з кольорами
+    for (int i = 0; i < MAX_CHANNELS; i++) {
+        Rectangle btnRect = { panelX + 10 + i * 80, panelY + 50, 80, 30 };
+        Color btnColor = (oscData->active_channel == i) ? channel_colors[i] : Fade(channel_colors[i], 0.5f);
+
+        // Встановлюємо кольори кнопки (BUTTON = 2)
+        GuiSetStyle(2, 0, ColorToInt(btnColor)); // BASE_COLOR_NORMAL
+        GuiSetStyle(2, 1, ColorToInt(btnColor)); // BORDER_COLOR_NORMAL
+        GuiSetStyle(2, 2, 0xFFFFFFFF);           // TEXT_COLOR_NORMAL
+
+        if (GuiButton(btnRect, TextFormat("CH%d", i + 1))) {
             oscData->active_channel = i;
         }
     }
-    current_y += 40;
+    // Повертаємо стилі кнопок до дефолтних
+    GuiSetStyle(2, 0, 0x363636ff); // BASE_COLOR_NORMAL
+    GuiSetStyle(2, 1, 0x000000ff); // BORDER_COLOR_NORMAL
+    GuiSetStyle(2, 2, 0xFFFFFFFF); // TEXT_COLOR_NORMAL
 
-    // Кнопки активації каналів
-    GuiLabel((Rectangle){panel_x, current_y, W_Controls, H_Controls}, "Activate Channels:");
-    current_y += Vertical_Space;
+    // розміри слайдерів
+    int W_size = 200;
+    int H_size = 30;
+    // Відступи для слайдерів
+    int sliderX = panelX + 20;
+    int sliderY = panelY + 80;
+    int spacingY = 70;
 
-    for (int i = 0; i < MAX_CHANNELS; i++)
-    {
-        char label[16];
-        sprintf(label, "Ch %d", i);
-        GuiCheckBox((Rectangle){panel_x + i * 70, current_y, 20, 20}, label, &oscData->channels[i].active);
-    }
-    current_y += 40;
+    int ch = oscData->active_channel;
+    Color activeColor = channel_colors[ch];
 
-    // Якщо активний канал неактивний, показуємо повідомлення і не відображаємо повзунки
-    ChannelSettings *ch = &oscData->channels[oscData->active_channel];
-    if (!ch->active)
-    {
-        GuiLabel((Rectangle){panel_x, current_y, W_Controls, 30}, "Selected channel is inactive.");
-        return;
-    }
+    // Встановлюємо кольори для надписів і слайдерів активного каналу
+    GuiSetStyle(1, 2, ColorToInt(activeColor)); // LABEL, TEXT_COLOR_NORMAL
+    GuiSetStyle(6, 3, ColorToInt(activeColor)); // SLIDER, SLIDER_COLOR
+    GuiSetStyle(6, 4, ColorToInt(activeColor)); // SLIDER, SLIDER_BORDER_COLOR
+    GuiSetStyle(6, 5, 2);                      // SLIDER, SLIDER_BORDER_WIDTH
 
-    // Повзунки для активного каналу
-    GuiLabel((Rectangle){panel_x, current_y, W_Controls, H_Controls}, "Scale (V/div)");
-    current_y += Vertical_Space;
-    GuiSliderBar((Rectangle){panel_x, current_y, W_Controls, H_Controls}, NULL, TextFormat("%.2f", ch->scale_y), &ch->scale_y, 0.1f, 1.0f);
-    current_y += Vertical_Space;
+    sliderY += 45;
+    DrawTextEx(font, "Vertical scale", (Vector2){sliderX, sliderY - H_size}, fontSize, LineSpacing, activeColor);
+    GuiSlider((Rectangle){sliderX, sliderY, W_size, H_size},
+              NULL, NULL, &oscData->channels[ch].scale_y, 0.1f, 2.0f);
+    DrawTextEx(font, TextFormat(" %0.2f", oscData->channels[ch].scale_y),
+               (Vector2){sliderX + W_size, sliderY}, fontSize, LineSpacing, activeColor);
 
-    GuiLabel((Rectangle){panel_x, current_y, W_Controls, H_Controls}, "Offset");
-    current_y += Vertical_Space;
-    GuiSliderBar((Rectangle){panel_x, current_y, W_Controls, H_Controls}, NULL, TextFormat("%d", (int)ch->offset_y), &ch->offset_y, -screenHeight, screenHeight * 2);
-    current_y += Vertical_Space;
+    // Зміщення по вертикалі
+    sliderY += spacingY;
+    DrawTextEx(font, "Vertical offset", (Vector2){sliderX, sliderY - H_size}, fontSize, LineSpacing, activeColor);
+    GuiSlider((Rectangle){sliderX, sliderY, W_size, H_size},
+              NULL, NULL, &oscData->channels[ch].offset_y, -200.0f, 1200.0f);
+    DrawTextEx(font, TextFormat(" %0.2f", oscData->channels[ch].offset_y),
+               (Vector2){sliderX + W_size, sliderY}, fontSize, LineSpacing, activeColor);
 
-    GuiLabel((Rectangle){panel_x, current_y, W_Controls, H_Controls}, "Trigger Level");
-    current_y += Vertical_Space;
-    GuiSliderBar((Rectangle){panel_x, current_y, W_Controls, H_Controls}, NULL, TextFormat("%.2f", ch->trigger_level), &ch->trigger_level, 0.0f, 1.5f);
-    current_y += Vertical_Space;
+    // Рівень тригера
+    sliderY += spacingY;
+    DrawTextEx(font, "Trigger level", (Vector2){sliderX, sliderY - H_size}, fontSize, LineSpacing, activeColor);
+    GuiSlider((Rectangle){sliderX, sliderY, W_size, H_size},
+              NULL, NULL, &oscData->channels[ch].trigger_level, 0.0f, 1.0f);
+    DrawTextEx(font, TextFormat(" %0.2f", oscData->channels[ch].trigger_level),
+               (Vector2){sliderX + W_size, sliderY}, fontSize, LineSpacing, activeColor);
 
-    GuiCheckBox((Rectangle){panel_x, current_y, 20, 20}, "Trigger Active", &ch->trigger_active);
-    current_y += 40;
+    // Прапорець активації тригера (CHECKBOX = 4)
+    GuiSetStyle(4, 1, ColorToInt(activeColor)); // CHECKBOX, BORDER_COLOR_NORMAL
+    GuiSetStyle(4, 6, ColorToInt(activeColor)); // CHECKBOX, CHECK_COLOR
 
-    GuiSetStyle(DEFAULT, TEXT_COLOR_NORMAL, 0xFFFFFFFF);
+    sliderY += spacingY/2;
+    GuiCheckBox((Rectangle){sliderX, sliderY, 20, 20},
+               NULL, &oscData->channels[ch].trigger_active);
+    DrawTextEx(font, "  Trigger Active",
+               (Vector2){sliderX, sliderY, 20, 20}, fontSize, LineSpacing, activeColor);
+
+    // Повертаємо стилі чекбокса до дефолтних
+    GuiSetStyle(4, 1, 0x000000ff); // BORDER_COLOR_NORMAL
+    GuiSetStyle(4, 6, 0xFFFFFFFF); // CHECK_COLOR
+
+    // Повертаємо стилі надписів і слайдерів до дефолтних
+    GuiSetStyle(1, 2, 0xFFFFFFFF); // LABEL, TEXT_COLOR_NORMAL
+    GuiSetStyle(6, 3, 0xAAAAAAFF); // SLIDER, SLIDER_COLOR
+    GuiSetStyle(6, 4, 0xAAAAAAFF); // SLIDER, SLIDER_BORDER_COLOR
+    GuiSetStyle(6, 5, 1);          // SLIDER, SLIDER_BORDER_WIDTH
 
     // Повзунок частоти оновлення інтерфейсу (мс)
-    GuiLabel((Rectangle){ panel_x, current_y, W_Controls, 20 }, "Refresh Rate (ms)");
-    current_y += Vertical_Space;
-    GuiSliderBar((Rectangle){panel_x, current_y, W_Controls, H_Controls}, NULL, TextFormat("%.1f", oscData->refresh_rate_ms), &oscData->refresh_rate_ms, 5.0f, 50.0f);
-    current_y += Vertical_Space;
+    sliderY += spacingY;
+    DrawTextEx(font, "Refresh Rate (ms)", (Vector2){sliderX, sliderY - H_size}, fontSize, LineSpacing, WHITE);
+
+    GuiSlider((Rectangle){sliderX, sliderY, W_size, H_size},
+              NULL, NULL, &oscData->refresh_rate_ms, 5.0f, 50.0f);
 
     static float old_refresh_rate_ms;
     char command[24] = "Rate:";  // достатній розмір буфера
 
     // **Пояснення:**
     // - Мета отримати інкремент слайдеру 5
-    // - `GuiSliderBar` повертає значення з плаваючою точкою.
+    // - `GuiSlider` повертає значення з плаваючою точкою.
     // - Ми додаємо 2.5 для коректного округлення при діленні на 5.
     // - Приводимо до int для цілочисельного ділення і множимо назад на 5 — отримуємо крок 5.
     // - Таким чином користувач бачить і змінює значення слайдера з кроком 5.
@@ -100,20 +139,28 @@ void gui_control_panel(OscData *oscData, int screenWidth, int screenHeight)
         old_refresh_rate_ms = oscData->refresh_rate_ms;
         send_command(oscData, command, sizeof(command), (int)oscData->refresh_rate_ms);
     }
+    DrawTextEx(font, TextFormat(" %.1f", oscData->refresh_rate_ms),
+               (Vector2){sliderX + W_size, sliderY}, fontSize, LineSpacing, WHITE);
 
+    sliderY += spacingY;
     // Повзунок горизонтального зміщення тригера
-    GuiLabel((Rectangle){ panel_x, current_y, W_Controls, 20 }, "Trigger offset X");
-    current_y += Vertical_Space;
-    GuiSliderBar((Rectangle){panel_x, current_y, W_Controls, H_Controls}, NULL, TextFormat("%d", (int)oscData->trigger_offset_x), &oscData->trigger_offset_x, 50, 600);
-    current_y += Vertical_Space;
+    DrawTextEx(font, "Trigger offset X", (Vector2){sliderX, sliderY - H_size}, fontSize, LineSpacing, WHITE);
 
+    GuiSlider((Rectangle){sliderX, sliderY, W_size, H_size},
+              NULL, NULL, &oscData->trigger_offset_x, 50, 600);
+    DrawTextEx(font, TextFormat(" %d", (int)oscData->trigger_offset_x),
+               (Vector2){sliderX + W_size, sliderY}, fontSize, LineSpacing, WHITE);
+
+    sliderY += spacingY;
     // Перемикач реверсу напрямку малювання сигналу
-    GuiCheckBox((Rectangle){panel_x, current_y, 20, 20}, "Reverse Signal", &oscData->reverse_signal);
-    current_y += Vertical_Space;
+    GuiCheckBox((Rectangle){sliderX, sliderY, 20, 20},
+                NULL, &oscData->reverse_signal);
+    DrawTextEx(font, "  Reverse Signal",
+               (Vector2){sliderX, sliderY, 20, 20}, fontSize, LineSpacing, WHITE);
 
     // Автоматичне підключення (тимчасово вимкнено)
-    /* GuiCheckBox((Rectangle){panel_x, current_y, 20, 20}, "Auto Connect", &oscData->auto_connect);
-    current_y += Vertical_Space; */
+    /* GuiCheckBox((Rectangle){sliderX, sliderY, 20, 20}, "Auto Connect", &oscData->auto_connect);
+    sliderY += spacingY; */
 }
 
 void send_command(OscData *data, char* command, size_t buffer_size, int number)
@@ -181,7 +228,4 @@ void write_usb_device(OscData *data, unsigned char* str, size_t len)
     printf("%s\n", str);
     printf("new_rate: %d\n", new_rate);
 }
-
-
-
 
