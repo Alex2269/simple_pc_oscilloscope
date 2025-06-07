@@ -64,20 +64,6 @@ void draw_channel_signal(float *history, int history_index, int trigger_index,
         // але центруємо його на позиції тригера trigger_x_pos
 
         // Малюємо ліву частину сигналу (до тригера) у реверсі
-        for (int i = 0; i < points_left - 1; i++) {
-            int idx1 = (history_index + trigger_index - points_left + i + history_size) % history_size;
-            int idx2 = (history_index + trigger_index - points_left + i + 1 + history_size) % history_size;
-
-            // Координати точок з інвертованим напрямком по X
-            Vector2 p1 = { trigger_x_pos + (points_left - i) * x_step,
-                           offset_y - history[idx1] * scale_y };
-            Vector2 p2 = { trigger_x_pos + (points_left - 1 - i) * x_step,
-                           offset_y - history[idx2] * scale_y };
-
-            DrawLineEx(p1, p2, lineThickness, color);
-        }
-
-        // Малюємо праву частину сигналу (після тригера) у реверсі
         for (int i = 0; i < points_right - 1; i++) {
             int idx1 = (history_index + trigger_index + i) % history_size;
             int idx2 = (history_index + trigger_index + i + 1) % history_size;
@@ -86,6 +72,20 @@ void draw_channel_signal(float *history, int history_index, int trigger_index,
             Vector2 p1 = { trigger_x_pos - i * x_step,
                            offset_y - history[idx1] * scale_y };
             Vector2 p2 = { trigger_x_pos - (i + 1) * x_step,
+                           offset_y - history[idx2] * scale_y };
+
+            DrawLineEx(p1, p2, lineThickness, color);
+        }
+
+        // Малюємо праву частину сигналу (після тригера) у реверсі
+        for (int i = 0; i < points_left - 1; i++) {
+            int idx1 = (history_index + trigger_index - points_left + i + history_size) % history_size;
+            int idx2 = (history_index + trigger_index - points_left + i + 1 + history_size) % history_size;
+
+            // Координати точок з інвертованим напрямком по X
+            Vector2 p1 = { trigger_x_pos + (points_left - i) * x_step,
+                           offset_y - history[idx1] * scale_y };
+            Vector2 p2 = { trigger_x_pos + (points_left - 1 - i) * x_step,
                            offset_y - history[idx2] * scale_y };
 
             DrawLineEx(p1, p2, lineThickness, color);

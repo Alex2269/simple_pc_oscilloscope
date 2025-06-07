@@ -64,20 +64,6 @@ void draw_channel_signal(float *history, int history_index, int trigger_index,
         // але центруємо його на позиції тригера trigger_x_pos
 
         // Малюємо ліву частину сигналу (до тригера) у реверсі
-        for (int i = 0; i < points_left - 1; i++) {
-            int idx1 = (history_index + trigger_index - points_left + i + history_size) % history_size;
-            int idx2 = (history_index + trigger_index - points_left + i + 1 + history_size) % history_size;
-
-            // Координати точок з інвертованим напрямком по X
-            Vector2 p1 = { trigger_x_pos + (points_left - i) * x_step,
-                           offset_y - history[idx1] * scale_y };
-            Vector2 p2 = { trigger_x_pos + (points_left - 1 - i) * x_step,
-                           offset_y - history[idx2] * scale_y };
-
-            DrawLineEx(p1, p2, lineThickness, color);
-        }
-
-        // Малюємо праву частину сигналу (після тригера) у реверсі
         for (int i = 0; i < points_right - 1; i++) {
             int idx1 = (history_index + trigger_index + i) % history_size;
             int idx2 = (history_index + trigger_index + i + 1) % history_size;
@@ -86,6 +72,20 @@ void draw_channel_signal(float *history, int history_index, int trigger_index,
             Vector2 p1 = { trigger_x_pos - i * x_step,
                            offset_y - history[idx1] * scale_y };
             Vector2 p2 = { trigger_x_pos - (i + 1) * x_step,
+                           offset_y - history[idx2] * scale_y };
+
+            DrawLineEx(p1, p2, lineThickness, color);
+        }
+
+        // Малюємо праву частину сигналу (після тригера) у реверсі
+        for (int i = 0; i < points_left - 1; i++) {
+            int idx1 = (history_index + trigger_index - points_left + i + history_size) % history_size;
+            int idx2 = (history_index + trigger_index - points_left + i + 1 + history_size) % history_size;
+
+            // Координати точок з інвертованим напрямком по X
+            Vector2 p1 = { trigger_x_pos + (points_left - i) * x_step,
+                           offset_y - history[idx1] * scale_y };
+            Vector2 p2 = { trigger_x_pos + (points_left - 1 - i) * x_step,
                            offset_y - history[idx2] * scale_y };
 
             DrawLineEx(p1, p2, lineThickness, color);
@@ -103,17 +103,17 @@ void draw_signal(OscData *oscData, float osc_width, float lineThickness)
     const int points_total = 500;
     const int history_size = 500;
 
-    // Якщо увімкнено режим реверсу сигналу
-    if (oscData->reverse_signal) {
-        int points_to_draw = points_total; // Малюємо весь буфер сигналу
+        // Якщо увімкнено режим реверсу сигналу
+        if (oscData->reverse_signal) {
+            int points_to_draw = points_total; // Малюємо весь буфер сигналу
 
-        // Нормалізоване положення тригера відносно ширини осцилографа
-        float trigger_pos_normalized = oscData->trigger_offset_x / osc_width;
+            // Нормалізоване положення тригера відносно ширини осцилографа
+            float trigger_pos_normalized = oscData->trigger_offset_x / osc_width;
 
-        // Зсув у точках відносно загальної кількості точок
-        int offset_points = (int)(trigger_pos_normalized * points_total);
+            // Зсув у точках відносно загальної кількості точок
+            int offset_points = (int)(trigger_pos_normalized * points_total);
 
-        // Обчислення початкових індексів для малювання сигналів каналів з урахуванням реверсу
+            // Обчислення початкових індексів для малювання сигналів каналів з урахуванням реверсу
         int start_index_a = (oscData->trigger_index_a + offset_points) % points_total;
         int start_index_b = (oscData->trigger_index_b + offset_points) % points_total;
 
@@ -130,12 +130,12 @@ void draw_signal(OscData *oscData, float osc_width, float lineThickness)
                             osc_width, lineThickness, points_total,
                             points_to_draw, 0,
                             0.0f, oscData->reverse_signal);
-    }
+        }
 
-    // Обчислюємо кількість точок ліворуч від тригера
-    int points_left = (int)(oscData->trigger_offset_x / osc_width * points_total);
-    // Кількість точок праворуч від тригера
-    int points_right = points_total - points_left;
+        // Обчислюємо кількість точок ліворуч від тригера
+        int points_left = (int)(oscData->trigger_offset_x / osc_width * points_total);
+        // Кількість точок праворуч від тригера
+        int points_right = points_total - points_left;
 
     // Малюємо сигнал каналу А з позиції тригера, з урахуванням точок ліворуч і праворуч
     draw_channel_signal(oscData->channel_a_history, oscData->history_index, oscData->trigger_index_a,
