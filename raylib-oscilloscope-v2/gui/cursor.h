@@ -8,8 +8,8 @@
 
 // Константи за замовчуванням для курсорів і графіки
 #define DEFAULT_CURSOR_WIDTH 10.0f
-#define DEFAULT_CURSOR_HEIGHT 30.0f
-#define DEFAULT_CURSOR_TOP_Y 25
+#define DEFAULT_CURSOR_HEIGHT 20.0f
+#define DEFAULT_CURSOR_TOP_Y 5
 #define ARROW_SIZE 10
 #define THIN_LINE 100
 
