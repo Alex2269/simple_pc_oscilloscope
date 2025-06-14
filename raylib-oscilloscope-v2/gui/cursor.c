@@ -31,9 +31,12 @@ Cursor InitCursor(float startX, float topY, float width, float height, Color col
  * Перевіряє, чи знаходиться миша над курсором (для початку перетягування).
  */
 static bool IsMouseOverCursor(Vector2 mousePos, Cursor cursor) {
+    int Sticking = 2; // Розширення області прилипання курсору до миші
     // Область по X розширена в 2 рази від ширини курсора, по Y - висота курсора
-    return (mousePos.x > cursor.x - cursor.width * 2 && mousePos.x < cursor.x + cursor.width * 2 &&
-            mousePos.y > cursor.topY && mousePos.y < cursor.topY + cursor.height);
+    return (mousePos.x > cursor.x - cursor.width * Sticking &&
+            mousePos.x < cursor.x + cursor.width * Sticking &&
+            mousePos.y > cursor.topY &&
+            mousePos.y < cursor.topY + cursor.height);
 }
 
 /*
@@ -101,8 +104,11 @@ void UpdateAndHandleCursors(Cursor *cursors, int count, Vector2 mousePos, bool m
  * Перевіряє, чи знаходиться миша над прямокутником (ручкою).
  */
 bool IsMouseOverRect(Vector2 mousePos, DragRect rect) {
-    return (mousePos.x > rect.x - rect.width / 2 && mousePos.x < rect.x + rect.width / 2 &&
-            mousePos.y > rect.y - rect.height / 2 && mousePos.y < rect.y + rect.height / 2);
+    int Sticking = 2; // Розширення області прилипання курсору до миші
+    return (mousePos.x > rect.x - rect.width / 2 &&
+            mousePos.x < rect.x + rect.width / 2 &&
+            mousePos.y > rect.y - rect.height * Sticking &&
+            mousePos.y < rect.y + rect.height * Sticking);
 }
 
 /*
