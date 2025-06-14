@@ -7,16 +7,22 @@
 #include <stdio.h>
 
 #define PI 3.14159265358979323846f
-#define CHANNEL_COUNT 6
+#define CHANNEL_COUNT 4
 
 extern int fontSize;  // Зовнішня змінна розміру шрифту
 extern Font font;     // Зовнішній шрифт для малювання тексту
 
+// Обчислення яскравості кольору (luminance)
+static float GetLuminance(Color color);
+
+// Вибір контрастного кольору тексту (білий або чорний)
+static Color GetContrastingTextColor(Color bgColor);
+
 // Масив кутів повороту регуляторів для кожного каналу (початково -135 градусів)
-static float knobAngles[CHANNEL_COUNT] = { -135.0f, -135.0f, -135.0f, -135.0f, -135.0f, -135.0f };
+static float knobAngles[CHANNEL_COUNT] = { -135.0f, -135.0f, -135.0f, -135.0f };
 
 // Масив станів перетягування (dragging) для кожного каналу
-static bool isDragging[CHANNEL_COUNT] = { false, false, false, false, false, false };
+static bool isDragging[CHANNEL_COUNT] = { false, false, false, false };
 
 // Індекс активного каналу, який зараз перетягують (-1 означає, що ніхто не перетягує)
 static int activeDraggingChannel = -1;
@@ -167,12 +173,15 @@ int Gui_Knob_Channel(int channel, int x_pos, int y_pos, const char *textTop, con
     Vector2 mousePos = GetMousePosition();
     bool mouseOver = CheckCollisionPointCircle(mousePos, center, radius);
 
+    // Визначаємо колір тексту (автоматично підбираємо, якщо альфа 0)
+    Color textColor = GetContrastingTextColor(colorText);
+
     // Відображення підказки зверху при наведенні курсора миші
     if (mouseOver && textTop && strlen(textTop) > 0) {
         int padding = 6; // Відступи навколо тексту підказки
         Vector2 textSize = MeasureTextEx(font, textTop, fontSize, 2);
 
-        // Прямокутник для фону підказки
+        // Прямокутник для фону підказки textTop
         Rectangle tooltipRect = {
             center.x - (textSize.x / 2.0f) - padding,
             center.y - radius - textSize.y - 2 * padding - 10,
@@ -180,8 +189,8 @@ int Gui_Knob_Channel(int channel, int x_pos, int y_pos, const char *textTop, con
             textSize.y + 2 * padding
         };
 
-        // Малюємо напівпрозорий фон підказки
-        DrawRectangleRec(tooltipRect, (Color){30, 30, 30, 220});
+        // Малюємо фоновий прямокутник підказки textTop
+        DrawRectangleRec(tooltipRect, textColor);
         // Малюємо рамку підказки
         DrawRectangleLinesEx(tooltipRect, 1, DARKGRAY);
         // Малюємо текст підказки білим кольором
@@ -190,11 +199,41 @@ int Gui_Knob_Channel(int channel, int x_pos, int y_pos, const char *textTop, con
                    fontSize, 2, colorText);
     }
 
+    int padding = 6; // Відступи навколо тексту підказки
+    Vector2 textSize = MeasureTextEx(font, textRight, fontSize, 2);
+
+    // Прямокутник для фону підказки textRight
+    Rectangle tooltipRect = {
+        center.x + radius + 4,
+        center.y - radius / 2 - 4,
+        textSize.x + 2 * padding,
+        textSize.y + 2 * padding
+    };
+
+    // Малюємо фоновий прямокутник підказки textRight
+    DrawRectangleRec(tooltipRect, colorText);
+    // Малюємо рамку підказки
+    DrawRectangleLinesEx(tooltipRect, 1, DARKGRAY);
     // Малюємо текст праворуч регулятора
     DrawTextEx(font, textRight,
                (Vector2){center.x + radius + 10, center.y - radius / 2},
-               fontSize, 2, colorText);
+               fontSize, 2, textColor);
 
     return valueChanged ? 1 : 0;
+}
+
+// Обчислення яскравості кольору (luminance)
+static float GetLuminance(Color color)
+{
+    float r = color.r / 255.0f;
+    float g = color.g / 255.0f;
+    float b = color.b / 255.0f;
+    return 0.2126f * r + 0.7152f * g + 0.0722f * b;
+}
+
+// Вибір контрастного кольору тексту (білий або чорний)
+static Color GetContrastingTextColor(Color bgColor)
+{
+    return (GetLuminance(bgColor) > 0.5f) ? BLACK : WHITE;
 }
 

@@ -69,7 +69,7 @@ void gui_control_panel(OscData *oscData, int screenWidth, int screenHeight) {
                      &oscData->channels[ch].scale_y, 0.1f, 2.0f, true, activeColor);
 
     // Зміщення по вертикалі
-    Gui_Knob_Channel(1, sliderX + 185, sliderY,
+    Gui_Knob_Channel(1, sliderX + 200, sliderY,
                      "Vertical offset", TextFormat("%d", (int)oscData->channels[ch].offset_y),
                      knob_radius,
                      &oscData->channels[ch].offset_y, -200.0f, 1200.0f, true, activeColor);
@@ -83,7 +83,7 @@ void gui_control_panel(OscData *oscData, int screenWidth, int screenHeight) {
                      &oscData->channels[ch].trigger_level, 0.0f, 1.0f, true, activeColor);
 
     // Рівень гістерезису
-    Gui_Knob_Channel(3, sliderX + 185, sliderY,
+    Gui_Knob_Channel(3, sliderX + 200, sliderY,
                      "Trigger hysteresis", TextFormat("%0.2f", oscData->channels[ch].trigger_hysteresis_px),
                      knob_radius,
                      &oscData->channels[ch].trigger_hysteresis_px, -1.0f, 1.0f, true, activeColor);
@@ -119,7 +119,7 @@ void gui_control_panel(OscData *oscData, int screenWidth, int screenHeight) {
     }
 
     // Регулятор горизонтального зміщення тригера
-    Gui_Knob_Channel(5, sliderX + 185, sliderY,
+    Gui_Knob_Channel(5, sliderX + 200, sliderY,
                      "Trigger offset X", TextFormat("%d", (int)oscData->trigger_offset_x),
                      knob_radius,
                      &oscData->trigger_offset_x, 50, 600, true, WHITE);
