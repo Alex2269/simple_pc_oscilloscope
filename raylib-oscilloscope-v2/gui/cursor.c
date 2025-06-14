@@ -44,7 +44,7 @@ static void UpdateCursorDrag(Cursor *cursor, Vector2 mousePos, Cursor *otherCurs
     cursor->x = mousePos.x;  // Оновлюємо позицію по X
 
     float minX = cursor->width / 2;             // Мінімальна позиція по X (щоб не вийти за межі екрану)
-    float maxX = GetScreenWidth() - cursor->width / 2;  // Максимальна позиція по X
+    float maxX = GetScreenWidth() - cursor->width / 2 - 360;  // Максимальна позиція по X (обмежуємся полем осцилографа)
     float collisionThreshold = cursor->width * 1.5f;    // Мінімальна відстань між курсорами
 
     // Перевірка зіткнення з іншим курсором
