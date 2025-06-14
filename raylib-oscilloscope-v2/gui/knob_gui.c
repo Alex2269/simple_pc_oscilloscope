@@ -7,7 +7,7 @@
 #include <stdio.h>
 
 #define PI 3.14159265358979323846f
-#define CHANNEL_COUNT 4
+#define CHANNEL_COUNT 6
 
 extern int fontSize;  // Зовнішня змінна розміру шрифту
 extern Font font;     // Зовнішній шрифт для малювання тексту
@@ -19,10 +19,10 @@ static float GetLuminance(Color color);
 static Color GetContrastingTextColor(Color bgColor);
 
 // Масив кутів повороту регуляторів для кожного каналу (початково -135 градусів)
-static float knobAngles[CHANNEL_COUNT] = { -135.0f, -135.0f, -135.0f, -135.0f };
+static float knobAngles[CHANNEL_COUNT] = { -135.0f, -135.0f, -135.0f, -135.0f, -135.0f, -135.0f };
 
 // Масив станів перетягування (dragging) для кожного каналу
-static bool isDragging[CHANNEL_COUNT] = { false, false, false, false };
+static bool isDragging[CHANNEL_COUNT] = { false, false, false, false, false, false };
 
 // Індекс активного каналу, який зараз перетягують (-1 означає, що ніхто не перетягує)
 static int activeDraggingChannel = -1;
