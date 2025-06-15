@@ -99,7 +99,7 @@ void gui_control_panel(OscData *oscData, int screenWidth, int screenHeight) {
     Gui_Knob_Channel(4, sliderX + knob_radius, sliderY,
                      "Refresh Rate (ms)", TextFormat("%d", (int)oscData->refresh_rate_ms),
                      knob_radius,
-                     &oscData->refresh_rate_ms, 5.0f, 50.0f, true, WHITE);
+                     &oscData->refresh_rate_ms, 5.0f, 50.0f, true, DARKGRAY);
 
     // **Пояснення:**
     // - Мета отримати інкремент слайдеру 5
@@ -122,12 +122,12 @@ void gui_control_panel(OscData *oscData, int screenWidth, int screenHeight) {
     Gui_Knob_Channel(5, sliderX + 200, sliderY,
                      "Trigger offset X", TextFormat("%d", (int)oscData->trigger_offset_x),
                      knob_radius,
-                     &oscData->trigger_offset_x, 50, 600, true, WHITE);
+                     &oscData->trigger_offset_x, 50, 600, true, DARKGRAY);
 
     sliderY += spacingY / 2;
     // Перемикач тестового сигналу
     Gui_CheckBox((Rectangle){sliderX, sliderY, 20, 20},
-                &oscData->test_signal, "Test signal", WHITE);
+                &oscData->test_signal, "Test signal", DARKGRAY);
 
     static bool test_signal;
     char command2[24] = "Test signal:";  // достатній розмір буфера
@@ -142,11 +142,11 @@ void gui_control_panel(OscData *oscData, int screenWidth, int screenHeight) {
 
     // Перемикач перемотки сигналу
     Gui_CheckBox((Rectangle){sliderX, sliderY, 20, 20},
-                &oscData->movement_signal, "Movement", WHITE);
+                &oscData->movement_signal, "Movement", DARKGRAY);
 
     // Перемикач реверсу напрямку малювання сигналу
     Gui_CheckBox((Rectangle){sliderX + 170, sliderY, 20, 20},
-                &oscData->reverse_signal, "Reverse", WHITE);
+                &oscData->reverse_signal, "Reverse", DARKGRAY);
 
     // Автоматичне підключення (тимчасово вимкнено)
     /* Gui_CheckBox((Rectangle){sliderX, sliderY, 20, 20}, "Auto Connect", &oscData->auto_connect);
