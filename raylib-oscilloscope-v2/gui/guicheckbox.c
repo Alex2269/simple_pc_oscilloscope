@@ -34,7 +34,7 @@ void Gui_CheckBox(Rectangle bounds, bool *checked, const char *text, Color сolo
     bool mouseOver = CheckCollisionPointRec(mousePoint, bounds);
 
     Color boxColor = (*checked) ? сolor : LIGHTGRAY;
-    if (mouseOver) boxColor = Fade(boxColor, 0.9f);
+    if (mouseOver) boxColor = Fade(boxColor, 0.8f);
 
     DrawRectangleRec(bounds, boxColor);
 
