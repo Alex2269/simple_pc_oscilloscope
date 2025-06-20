@@ -83,44 +83,46 @@ void Gui_CheckBox(Rectangle bounds, bool *checked, const char *textTop, const ch
     int localSpacing = 2;  // Відступ між символами (локальна змінна для уникнення конфліктів)
     int padding = 4;       // Відступи навколо тексту (padding)
 
-    // --- Малюємо текст праворуч (textRight) з підтримкою багаторядковості ---
+    if(textRight != NULL) {
+        // --- Малюємо текст праворуч (textRight) з підтримкою багаторядковості ---
 
-    // Підрахунок кількості рядків і максимальної ширини рядка для textRight
-    int lineCountRight = 1;
-    int maxLineWidthCharsRight = 0;
-    int currentLineWidthCharsRight = 0;
-    for (const char* p = textRight; *p != '\0'; p++) {
-        if (*p == '\n') {
-            lineCountRight++;
-            if (currentLineWidthCharsRight > maxLineWidthCharsRight) maxLineWidthCharsRight = currentLineWidthCharsRight;
-            currentLineWidthCharsRight = 0;
-        } else {
-            currentLineWidthCharsRight++;
+        // Підрахунок кількості рядків і максимальної ширини рядка для textRight
+        int lineCountRight = 1;
+        int maxLineWidthCharsRight = 0;
+        int currentLineWidthCharsRight = 0;
+        for (const char* p = textRight; *p != '\0'; p++) {
+            if (*p == '\n') {
+                lineCountRight++;
+                if (currentLineWidthCharsRight > maxLineWidthCharsRight) maxLineWidthCharsRight = currentLineWidthCharsRight;
+                currentLineWidthCharsRight = 0;
+            } else {
+                currentLineWidthCharsRight++;
+            }
         }
+        if (currentLineWidthCharsRight > maxLineWidthCharsRight) maxLineWidthCharsRight = currentLineWidthCharsRight;
+
+        // Обчислення ширини і висоти блоку тексту праворуч з урахуванням міжсимвольного відступу і padding
+        float textRightWidth = maxLineWidthCharsRight * (psfFont.width + localSpacing) - localSpacing + 2 * padding;
+        float textRightHeight = lineCountRight * psfFont.height + (lineCountRight - 1) * LineSpacing + 2 * padding;
+
+        // Позиція тексту праворуч, вертикально центрована відносно чекбокса
+        Vector2 textRightPos = {bounds.x + bounds.width + 10 + padding, bounds.y + (bounds.height - textRightHeight) / 2 + padding / 2};
+
+        // Прямокутник фону під текстом праворуч
+        Rectangle textRightBg = {
+            textRightPos.x - padding,
+            textRightPos.y - padding / 2,
+            textRightWidth,
+            textRightHeight
+        };
+
+        // Малюємо фон і рамку для тексту праворуч
+        DrawRectangleRec(textRightBg, boxColor);
+        DrawRectangleLinesEx(textRightBg, 1, borderColor);
+
+        // Малюємо текст праворуч з підтримкою переносу рядків
+        DrawPSFTextUTF8(psfFont, textRightPos.x, textRightPos.y, textRight, localSpacing, textColor);
     }
-    if (currentLineWidthCharsRight > maxLineWidthCharsRight) maxLineWidthCharsRight = currentLineWidthCharsRight;
-
-    // Обчислення ширини і висоти блоку тексту праворуч з урахуванням міжсимвольного відступу і padding
-    float textRightWidth = maxLineWidthCharsRight * (psfFont.width + localSpacing) - localSpacing + 2 * padding;
-    float textRightHeight = lineCountRight * psfFont.height + (lineCountRight - 1) * LineSpacing + 2 * padding;
-
-    // Позиція тексту праворуч, вертикально центрована відносно чекбокса
-    Vector2 textRightPos = {bounds.x + bounds.width + 10 + padding, bounds.y + (bounds.height - textRightHeight) / 2 + padding / 2};
-
-    // Прямокутник фону під текстом праворуч
-    Rectangle textRightBg = {
-        textRightPos.x - padding,
-        textRightPos.y - padding / 2,
-        textRightWidth,
-        textRightHeight
-    };
-
-    // Малюємо фон і рамку для тексту праворуч
-    DrawRectangleRec(textRightBg, boxColor);
-    DrawRectangleLinesEx(textRightBg, 1, borderColor);
-
-    // Малюємо текст праворуч з підтримкою переносу рядків
-    DrawPSFTextUTF8(psfFont, textRightPos.x, textRightPos.y, textRight, localSpacing, textColor);
 
     // --- Малюємо підказку зверху (textTop) при наведенні миші ---
 

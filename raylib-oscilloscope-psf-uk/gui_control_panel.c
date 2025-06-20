@@ -51,7 +51,7 @@ void gui_control_panel(OscData *oscData, int screenWidth, int screenHeight) {
 
     // Кнопки вибору активного каналу з кольорами
     for (int i = 0; i < MAX_CHANNELS; i++) {
-        Rectangle btnRect = { panelX + 20 + i * 80, panelY + 50, 60, 30 };
+        Rectangle btnRect = { panelX + 20 + i * 80, panelY + 60, 60, 30 };
         Color btnColor = (oscData->active_channel == i) ? channel_colors[i] : Fade(channel_colors[i], 0.5f);
 
         if (    Gui_Button(btnRect, TextFormat("CH%d", i + 1), btnColor, GRAY, DARKGRAY, (Color){0,0,0,0} )           ) {
@@ -64,7 +64,7 @@ void gui_control_panel(OscData *oscData, int screenWidth, int screenHeight) {
     int H_size = 30;
     // Відступи для слайдерів
     int sliderX = panelX + 20;
-    int sliderY = panelY + 80;
+    int sliderY = panelY + 90;
     int spacingY = 100;
 
     int ch = oscData->active_channel;
@@ -132,7 +132,7 @@ void gui_control_panel(OscData *oscData, int screenWidth, int screenHeight) {
                      knob_radius,
                      &oscData->trigger_offset_x, 50, 600, true, DARKGRAY);
 
-    sliderY += spacingY / 2 + 10;
+    sliderY += spacingY / 2 + 25;
 
     Gui_CheckBox((Rectangle){sliderX, sliderY, 30, 30},
                 &oscData->channels[ch].trigger_active,
@@ -142,7 +142,7 @@ void gui_control_panel(OscData *oscData, int screenWidth, int screenHeight) {
 
     int newSelection = Gui_Dropdown(dropdownBounds, dropdownItems, 3,
                                    oscData->channels[ch].trigger_edge,
-                                   "Тип фронту тригера",
+                                   "Тип\nфронту\nтригера",
                                    &dropdownOpen[ch],
                                    activeColor);
 
@@ -154,12 +154,12 @@ void gui_control_panel(OscData *oscData, int screenWidth, int screenHeight) {
         send_command(oscData, cmd, sizeof(cmd), newSelection);
     }
 
-    sliderY += spacingY / 2 + 10;
+    sliderY += spacingY - 20;
 
     // Перемикач тестового сигналу
     Gui_CheckBox((Rectangle){sliderX, sliderY, 30, 30},
                 &oscData->test_signal,
-                "Тест сигнал", "T sig", DARKGRAY);
+                "Тестовий\nсигнал", NULL, DARKGRAY);
 
     static bool test_signal;
     char command2[24] = "Test signal:";  // достатній розмір буфера
@@ -170,19 +170,19 @@ void gui_control_panel(OscData *oscData, int screenWidth, int screenHeight) {
         send_command(oscData, command2, sizeof(command2), (int)oscData->test_signal);
     }
 
-    sliderY += spacingY / 2;
+    // sliderY += spacingY / 2;
 
     // Перемикач перемотки сигналу
-    Gui_CheckBox((Rectangle){sliderX, sliderY, 30, 30},
+    Gui_CheckBox((Rectangle){sliderX + 75, sliderY, 30, 30},
                 &oscData->movement_signal,
-                "Прокручування сигналу", "Movement", DARKGRAY);
+                "Прокручування\nсигналу\nMovement", NULL, DARKGRAY);
 
-    sliderY += spacingY / 2;
+    // sliderY += spacingY / 2;
 
     // Перемикач реверсу напрямку малювання сигналу
-    Gui_CheckBox((Rectangle){sliderX, sliderY, 30, 30},
+    Gui_CheckBox((Rectangle){sliderX+150, sliderY, 30, 30},
                 &oscData->reverse_signal,
-                "Реверс сигналу", "Reverse", DARKGRAY);
+                "Реверс\nсигналу", NULL, DARKGRAY);
 
     // Автоматичне підключення (тимчасово вимкнено)
     /* Gui_CheckBox((Rectangle){sliderX, sliderY, 30, 30}, "Auto Connect", &oscData->auto_connect);
