@@ -7,8 +7,8 @@ extern int fontSize;       // Розмір шрифту (не використо
 extern int LineSpacing;    // Відступ між рядками тексту
 extern Font font;          // Стандартний шрифт raylib (можливо, для інших елементів)
 
-#include "psf_font.h"        // Заголовок із парсером PSF-шрифту
-extern PSF_Font psfFont;  // Глобальна змінна шрифту PSF
+#include "psf_font.h"      // Заголовок із парсером PSF-шрифту
+extern PSF_Font psfFont;   // Глобальна змінна шрифту PSF
 extern int spacing;        // Відступ між символами для DrawPSFTextUTF8
 
 /**

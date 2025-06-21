@@ -83,8 +83,9 @@ void Gui_CheckBox(Rectangle bounds, bool *checked, const char *textTop, const ch
     int localSpacing = 2;  // Відступ між символами (локальна змінна для уникнення конфліктів)
     int padding = 4;       // Відступи навколо тексту (padding)
 
-    if(textRight != NULL) {
-        // --- Малюємо текст праворуч (textRight) з підтримкою багаторядковості ---
+    // --- Малюємо текст праворуч (textRight) з підтримкою багаторядковості ---
+
+    if(textRight && textRight[0] != '\0') {
 
         // Підрахунок кількості рядків і максимальної ширини рядка для textRight
         int lineCountRight = 1;
