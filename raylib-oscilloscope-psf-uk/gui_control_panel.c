@@ -32,8 +32,6 @@ void write_usb_device(OscData *data, unsigned char* str, size_t len);
 // Масив кольорів каналів
 static Color channel_colors[MAX_CHANNELS] = { YELLOW, GREEN, RED, BLUE };
 
-// Масив кольорів каналів
-// static Color channel_colors[MAX_CHANNELS] = { YELLOW, GREEN, RED, BLUE };
 void gui_control_panel(OscData *oscData, int screenWidth, int screenHeight) {
     // Позиції і розміри панелі
     int panelX = screenWidth - 350;
