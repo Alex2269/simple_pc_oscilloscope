@@ -85,7 +85,7 @@ void Gui_CheckBox(Rectangle bounds, bool *checked, const char *textTop, const ch
 
     // --- Малюємо текст праворуч (textRight) з підтримкою багаторядковості ---
 
-    if(textRight && textRight[0] != '\0') {
+    if(textRight != NULL && textRight[0] != '\0') {
 
         // Підрахунок кількості рядків і максимальної ширини рядка для textRight
         int lineCountRight = 1;
