@@ -159,10 +159,10 @@ bool Gui_ArrowButton(Rectangle bounds, PSF_Font font, ArrowDirection direction, 
     bool mousePressed = mouseOver && IsMouseButtonPressed(MOUSE_LEFT_BUTTON);
     bool mouseDown = mouseOver && IsMouseButtonDown(MOUSE_LEFT_BUTTON);
 
-    static const double delayBeforeAccel = 0.20;  // Затримка перед прискоренням (сек)
-    static const double baseInterval = 0.25;      // Початковий інтервал (сек)
-    static const double minInterval = 0.005;      // Мінімальний інтервал (сек)
-    static const double accelRate = 0.075;        // Швидкість зменшення інтервалу
+    static const double delayBeforeAccel = 0.175;  // Затримка перед прискоренням (сек)
+    static const double baseInterval = 0.25;       // Початковий інтервал (сек)
+    static const double minInterval = 0.005;       // Мінімальний інтервал (сек)
+    static const double accelRate = 0.075;         // Швидкість зменшення інтервалу
 
     if (mousePressed) {
         holdState->isHeld = true;
