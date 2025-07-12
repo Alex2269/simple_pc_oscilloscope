@@ -6,7 +6,8 @@
 #include "button.h"
 #include "guicheckbox.h"
 #include "sliders.h"
-#include "sliders_ex.h"
+// #include "sliders_ex.h"
+#include "slider_widget.h"
 #include "knob_gui.h"
 
 #include <stddef.h>
@@ -296,13 +297,20 @@ void gui_control_panel(OscData *oscData, int screenWidth, int screenHeight) {
 
 
     int sliderWidth = 10;
-    int sliderHeight = 550;
-    Rectangle sliderBounds = { sliderX - 25, 20, sliderWidth, sliderHeight };
-    Gui_SliderEx(0, sliderBounds, font18, NULL, NULL, &oscData->channels[0].offset_y, 700.0f, 0.0f, true, YELLOW);
-    Gui_SliderEx(1, sliderBounds, font18, NULL, NULL, &oscData->channels[1].offset_y, 700.0f, 0.0f, true, GREEN);
-    Gui_SliderEx(2, sliderBounds, font18, NULL, NULL, &oscData->channels[2].offset_y, 700.0f, 0.0f, true, RED);
-    Gui_SliderEx(3, sliderBounds, font18, NULL, NULL, &oscData->channels[3].offset_y, 700.0f, 0.0f, true, SKYBLUE);
+    int sliderHeight = 560;
+    Rectangle sliderBounds = { sliderX - 35, 20, sliderWidth, sliderHeight };
+    // Gui_SliderEx(0, sliderBounds, font18, NULL, NULL, &oscData->channels[0].offset_y, 700.0f, 0.0f, true, YELLOW);
+    // Gui_SliderEx(1, sliderBounds, font18, NULL, NULL, &oscData->channels[1].offset_y, 700.0f, 0.0f, true, GREEN);
+    // Gui_SliderEx(2, sliderBounds, font18, NULL, NULL, &oscData->channels[2].offset_y, 700.0f, 0.0f, true, RED);
+    // Gui_SliderEx(3, sliderBounds, font18, NULL, NULL, &oscData->channels[3].offset_y, 700.0f, 0.0f, true, SKYBLUE);
 
+    RegisterSlider(0, sliderBounds, &oscData->channels[0].offset_y, 700.0f, 0.0f, true, YELLOW, NULL, NULL);
+    RegisterSlider(1, sliderBounds, &oscData->channels[1].offset_y, 700.0f, 0.0f, true, GREEN, NULL, NULL);
+    RegisterSlider(2, sliderBounds, &oscData->channels[2].offset_y, 700.0f, 0.0f, true, RED, NULL, NULL);
+    RegisterSlider(3, sliderBounds, &oscData->channels[3].offset_y, 700.0f, 0.0f, true, SKYBLUE, NULL, NULL);
+
+    // Централізована функція, яка обробляє взаємодію і малює всі слайдери
+    UpdateSlidersAndDraw(font18, 2);
 
     // Аналогічно інші слайдери для offset_y, trigger_level і т.д.
 }
