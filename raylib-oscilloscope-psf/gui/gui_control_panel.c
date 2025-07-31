@@ -376,8 +376,8 @@ void GuiControlPanelRender(OscData *oscData)
     Color activeColor = channel_colors[ch];
     ChannelSettings *Ch = &oscData->channels[ch];
 
-    int x_start = 50;  // Піксельна горизонтальна позиція початку лінії тригера
-    int x_end = 300;   // Піксельна горизонтальна позиція кінця
+    int x_start = 25;  // Піксельна горизонтальна позиція початку лінії тригера
+    int x_end = 75;  // Піксельна горизонтальна позиція кінця
     Color trigger_color = activeColor;
 
     // Обчислення піксельної позиції лінії тригера для малювання:
@@ -421,7 +421,7 @@ void GuiControlPanelRender(OscData *oscData)
     DrawLine(x_start, pixel_y, x_end, pixel_y, trigger_color);
 
     // Малюємо маркер (ручку) для кращої видимості і зручності перетягування
-    DrawCircle(x_end, pixel_y, 5, trigger_color);
+    DrawCircle(x_start, pixel_y, 5, trigger_color);
 
     // Якщо хочете, зв'яжіть слайдер з trigger_y_position (значення у логічних координатах).
     // Слайдер повинен теж відображатися на тій самій лінії, трансформуючи trigger_y_position у пікселі.
