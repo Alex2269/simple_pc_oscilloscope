@@ -235,12 +235,12 @@ void gui_control_panel(OscData *oscData, int screenWidth, int screenHeight) {
                 &oscData->reverse_signal,
                 font24 ,"Реверс\nсигналу", NULL, DARKGRAY);
 
-    static bool last_dynamic_mode = false;
     Gui_CheckBox((Rectangle){sliderX+120, sliderY, 30, 30},
                 &oscData->dynamic_buffer_mode,
                 font24 ,"Динамічний\nбуфер\npoints_to_display",
                 /*TextFormat(": %d",oscData->points_to_display)*/NULL, DARKGRAY);
 
+    static bool last_dynamic_mode = false;
     if (oscData->dynamic_buffer_mode != last_dynamic_mode) {
         int target_history_size = oscData->dynamic_buffer_mode ? oscData->points_to_display : 10000;
         setup_channel_buffers(oscData, target_history_size);
