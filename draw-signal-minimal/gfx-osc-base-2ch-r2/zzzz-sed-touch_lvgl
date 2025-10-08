@@ -1,0 +1,30 @@
+#!/bin/sh
+
+DIRS=$1
+
+replace() {
+ # sed -i s/'tft_draw_line'/'graph_ray'/g ${1}
+ # sed -i s/'graph_ray'/'signal'/g ${1}
+  # sed -i s/'writePixel'/'DrawPixel'/g ${1}
+  # sed -i s/'fillRect'/'DrawRectangle'/g ${1}
+
+}
+
+echo "$DIRS" | while read d ; do
+  if test -n "$d" -a -d "$d"; then
+    find "$d" -type f -name '*' | while read SRC; do
+      replace "$SRC"
+    done
+  fi
+done
+
+# find lvgl ! -name '*.c' -delete
+# find lvgl ! -name '*.h' -delete
+# find lvgl ! -name '*.s' -delete
+
+# DEST=/destination/full/path
+# cd to lvgl_v8
+# cp --parent $(find lvgl -name '*.c') ${DEST}
+# cp --parent $(find lvgl -name '*.h') ${DEST}
+
+
