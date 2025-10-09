@@ -7,10 +7,8 @@
 
 const char *TextFormat(const char *text, ...)
 {
-    #define MAX_TEXT_BUFFER_LENGTH 1024     // Size of internal static buffers used on some functions:
-    #ifndef MAX_TEXTFORMAT_BUFFERS
-    #define MAX_TEXTFORMAT_BUFFERS 4        // Maximum number of static buffers for text formatting
-    #endif
+    #define MAX_TEXT_BUFFER_LENGTH 1024   // Size of internal static buffers used on some functions:
+    #define MAX_TEXTFORMAT_BUFFERS 4      // Maximum number of static buffers for text formatting
 
     // We create an array of buffers so strings don't expire until MAX_TEXTFORMAT_BUFFERS invocations
     static char buffers[MAX_TEXTFORMAT_BUFFERS][MAX_TEXT_BUFFER_LENGTH] = { 0 };
