@@ -28,6 +28,7 @@ int main(void){
 
     while(1) {
       oscil_run();
+      gfx_flush();
     }
     return 0;
 }
