@@ -5,10 +5,8 @@
 #include <stdio.h>
 #include <limits.h>
 
-#include "vga_adafruit.h"
 #include "gfx.h"
-#include "tft.h"
-#include "pixel.h"
+#include "display.h"
 #include "osc.h"
 
 #include "rs232.h"

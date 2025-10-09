@@ -5,11 +5,11 @@
  extern "C" {
 #endif
 
-#include "vga_adafruit.h"
 #include <math.h>
 #include <stdlib.h>
+#include <stdbool.h>
 
-#include "color.h"
+#include "graphics.h"
 
 #define WIDTH 800
 #define HEIGHT 480

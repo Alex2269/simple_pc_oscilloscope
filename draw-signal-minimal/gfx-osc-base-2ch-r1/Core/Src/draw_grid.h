@@ -3,8 +3,8 @@
 #ifndef DRAW_GRID_H_
 #define DRAW_GRID_H_
 
-#include "vga_adafruit.h"
-#include "color.h"
+#include "graphics.h"
+
 #include <stdint.h>
 
 // --- Прототипи функцій ---

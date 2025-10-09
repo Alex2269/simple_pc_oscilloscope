@@ -1,7 +1,7 @@
 // lines.c
 
-#include "lines.h"
-#include "pixel.h"
+#include "graphics.h"
+#include "gfx.h"
 
 // малювання лінії окремими пікселями з передачою кольору в функцію.
 void DrawThinLine(int x1, int y1, int x2, int y2, int thickness, uint32_t color)
@@ -103,3 +103,33 @@ void DrawThickLine(int x1, int y1, int x2, int y2, int thickness, uint32_t color
     }
 }
 
+// Малювання заповненого прямокутника кольором color (у форматі 0xRRGGBB)
+void DrawRectangle(int16_t x, int16_t y, int16_t width, int16_t height, uint32_t color)
+{
+    for (int16_t py = y; py < y + height; py++) {
+        for (int16_t px = x; px < x + width; px++) {
+            DrawPixel(px, py, color);
+        }
+    }
+}
+
+// Малювання не заповненого прямокутника кольором color (у форматі 0xRRGGBB)
+void DrawRect(int16_t x, int16_t y, int16_t width, int16_t height, uint32_t color)
+{
+    // Верхня горизонтальна лінія
+    for (int16_t px = x; px < x + width; px++) {
+        DrawPixel(px, y, color);
+    }
+    // Нижня горизонтальна лінія
+    for (int16_t px = x; px < x + width; px++) {
+        DrawPixel(px, y + height - 1, color);
+    }
+    // Ліва вертикальна лінія
+    for (int16_t py = y; py < y + height; py++) {
+        DrawPixel(x, py, color);
+    }
+    // Права вертикальна лінія
+    for (int16_t py = y; py < y + height; py++) {
+        DrawPixel(x + width - 1, py, color);
+    }
+}

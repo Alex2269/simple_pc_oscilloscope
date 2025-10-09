@@ -1,6 +1,5 @@
 #include "osc.h"
 #include "draw_grid.h"
-#include "lines.h"
 #include "rs232.h"
 #include "find_usb_device.h"
 #include "test_signal.h"

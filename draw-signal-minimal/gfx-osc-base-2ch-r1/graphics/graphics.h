@@ -7,7 +7,6 @@
 extern "C" {
 #endif
 
-#include "vga_adafruit.h"
 #include "color.h"
 
 #include <stdint.h>
@@ -21,6 +20,11 @@ extern uint16_t POINT_COLOR;
 void DrawThinLine(int x1, int y1, int x2, int y2, int thickness, uint32_t color);
 // малювання лінії окремими квадратиками з передачою кольору в функцію.
 void DrawThickLine(int x1, int y1, int x2, int y2, int thickness, uint32_t color);
+
+// Малювання заповненого прямокутника кольором color (у форматі 0xRRGGBB)
+void DrawRectangle(int16_t x, int16_t y, int16_t width, int16_t height, uint32_t color);
+// Малювання не заповненого прямокутника кольором color (у форматі 0xRRGGBB)
+void DrawRect(int16_t x, int16_t y, int16_t width, int16_t height, uint32_t color);
 
 #ifdef __cplusplus
 }
