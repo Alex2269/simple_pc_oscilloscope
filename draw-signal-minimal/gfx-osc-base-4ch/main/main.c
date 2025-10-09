@@ -9,6 +9,7 @@
 
 #include "main.h"
 #include "graphics.h"
+#include "TextFormat.h"
 #include "init_osc_data.h"
 #include "setup_channel_buffers.h"
 #include "rs232.h"
@@ -109,9 +110,9 @@ int main(void) {
                 // DrawPSFText(font20, textPos.x, textPos.y,
                 //             TextFormat("Ch%d: %.0f", i+1, last_value),
                 //             spacing, channel_colors[i]);
-                // DrawPSFTextWithInvertedBackground(font12, textPos.x, textPos.y,
-                //                                   TextFormat("Ch%d: %.0f", i+1, last_value),
-                //                                   spacing, channel_colors[i],4);
+                DrawPSFTextWithInvertedBackground(font12, textPos.x, textPos.y,
+                                                  TextFormat("Ch%d: %.0f", i+1, last_value),
+                                                  spacing, channel_colors[i],4);
             }
         }
 
