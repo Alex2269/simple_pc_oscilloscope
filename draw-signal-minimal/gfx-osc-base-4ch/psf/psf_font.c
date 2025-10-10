@@ -348,7 +348,7 @@ void DrawPSFTextWithInvertedBackground(PSF_Font font, int x, int y, const char* 
     float bgHeight = lineCount * font.height + (lineCount - 1) * spacing + 2 * padding;
 
     // Користуємо функцію, яка отримує контрастний інверсний колір фону з корекцією яскравості
-    uint32_t bgColor = PINK; //GetContrastingInvertedBackground(textColor);
+    uint32_t bgColor = GetContrastingInvertedBackground(textColor);
 
     // Малюємо фон та контур
     DrawRectangle(x - padding, y - padding, bgWidth, bgHeight, bgColor);
