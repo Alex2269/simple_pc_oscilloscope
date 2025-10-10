@@ -519,7 +519,7 @@ static int IsColorDark(uint32_t color) {
 static uint32_t GetContrastingInvertedBackground(uint32_t textColor) {
     uint32_t invColor = InvertColor(textColor);
     if (IsColorDark(textColor)) {
-        // Якщо текст темний
+        // Якщо текст темний, робимо фон світлим і насиченим
         invColor = ChangeSaturation(invColor, 0.35f);
 
         uint8_t r = (((invColor >> 16) & 0xFF) + 255) / 2;
@@ -528,7 +528,7 @@ static uint32_t GetContrastingInvertedBackground(uint32_t textColor) {
 
         invColor = (r << 16) | (g << 8) | b;
     } else {
-        // Якщо текст світлий
+        // Якщо текст світлий, фон темніший і менш насичений
         invColor = ChangeSaturation(invColor, 0.65f);
 
         uint8_t r = ((invColor >> 16) & 0xFF) / 2;
@@ -539,3 +539,4 @@ static uint32_t GetContrastingInvertedBackground(uint32_t textColor) {
     }
     return invColor;
 }
+
