@@ -1,0 +1,34 @@
+
+
+#ifndef _LINES_H
+#define _LINES_H
+
+#ifdef __cplusplus
+extern "C" {
+#endif
+
+#include "color.h"
+
+#include <stdint.h>
+#include <math.h>
+#include <stdlib.h>
+
+extern uint16_t BACK_COLOR;
+extern uint16_t POINT_COLOR;
+
+// малювання лінії окремими пікселями з передачою кольору в функцію.
+void DrawThinLine(int x1, int y1, int x2, int y2, int thickness, uint32_t color);
+// малювання лінії окремими квадратиками з передачою кольору в функцію.
+void DrawThickLine(int x1, int y1, int x2, int y2, int thickness, uint32_t color);
+
+// Малювання заповненого прямокутника кольором color (у форматі 0xRRGGBB)
+void DrawRectangle(int16_t x, int16_t y, int16_t width, int16_t height, uint32_t color);
+// Малювання не заповненого прямокутника кольором color (у форматі 0xRRGGBB)
+void DrawRect(int16_t x, int16_t y, int16_t width, int16_t height, uint32_t color);
+
+#ifdef __cplusplus
+}
+#endif
+
+#endif /* _LINES_H */
+
