@@ -91,7 +91,7 @@ int main(void) {
         gfx_clear();
 
         // DrawRectangle(0, 0, osc_width, osc_height, BLACK);
-        draw_grid(osc_width, osc_height);
+        draw_grid(osc_width, osc_height, 50, 49);
 
         // Малювання курсорів, ліній, ручки та тексту
         // DrawCursorsAndDistance(cursors, 2, font12, font12.height, &centerRect);

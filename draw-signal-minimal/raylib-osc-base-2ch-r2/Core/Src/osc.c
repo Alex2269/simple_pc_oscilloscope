@@ -218,7 +218,7 @@ void run_buffering(void)
   }
 
   // Малювання сітки
-  draw_grid(WIDTH, HEIGHT);
+  draw_grid(WIDTH, HEIGHT, 50, 49);
 
   // Відображення графіків з каналів
   for (uint16_t i = BEGIN_RAY; i < WIDTH_RAY; i++) {
@@ -254,7 +254,7 @@ void run_no_buffering(void)
   rotate_buff(buff_scroll_x);
 
   // Малювання сітки
-  draw_grid(WIDTH, HEIGHT);
+  draw_grid(WIDTH, HEIGHT, 50, 49);
 
   // Відображення графіків без буферизації
   for (uint16_t i = BEGIN_RAY; i < WIDTH_RAY; i++) {
