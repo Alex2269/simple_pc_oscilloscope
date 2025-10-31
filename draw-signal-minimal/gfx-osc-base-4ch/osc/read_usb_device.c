@@ -23,18 +23,19 @@ void read_usb_device(OscData *data) {
             buffer[buf_idx++] = byte;
             if (buf_idx == PACKET_SIZE) {
                 // Маємо повний пакет
-                uint16_t channel_values[4];
+                int16_t channel_values[4];
                 if (parse_binary_packet(buffer, channel_values) == 0) {
                     data->adc_tmp_a = channel_values[0];
                     data->adc_tmp_b = channel_values[1];
                     data->adc_tmp_c = channel_values[2];
                     data->adc_tmp_d = channel_values[3];
 
-                    // Масштабування
-                    float scaled_a = ((float)data->adc_tmp_a / 4095) * WORKSPACE_HEIGHT;
-                    float scaled_b = ((float)data->adc_tmp_b / 4095) * WORKSPACE_HEIGHT;
-                    float scaled_c = ((float)data->adc_tmp_c / 4095) * WORKSPACE_HEIGHT;
-                    float scaled_d = ((float)data->adc_tmp_d / 4095) * WORKSPACE_HEIGHT;
+                    // Масштабування сигналу до розміру сітки зі зміщенням до центру
+                    static int height = 500;
+                    float scaled_a = ((float)data->adc_tmp_a / 4095) * height * (data->channels[0].signal_level) - 600/2;
+                    float scaled_b = ((float)data->adc_tmp_b / 4095) * height * (data->channels[1].signal_level) - 600/2;
+                    float scaled_c = ((float)data->adc_tmp_c / 4095) * height * (data->channels[2].signal_level) - 600/2;
+                    float scaled_d = ((float)data->adc_tmp_d / 4095) * height * (data->channels[3].signal_level) - 600/2;
 
                     if (data->channels[0].channel_history)
                         data->channels[0].channel_history[data->history_index] = scaled_a;

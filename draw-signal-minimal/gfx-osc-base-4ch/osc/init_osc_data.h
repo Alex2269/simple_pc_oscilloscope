@@ -9,13 +9,13 @@
 #include <stdint.h>
 #include <string.h>
 
-#define WORKSPACE_HEIGHT 550
 #define MAX_CHANNELS 4
 #define PACKET_SIZE 13
 
 typedef struct {
     bool active;
-    float scale_y;               // Масштабування по вертикалі
+    float scale_y;               // Масштабування по вертикалі (розтягування по вертикалі)
+    float signal_level;          // Налаштування рівня сигналу
     float offset_y;              // Зміщення по вертикалі
     float trigger_level;         // Рівень тригера для (0..1)
     float trigger_hysteresis_px; // Визначаємо гістерезис у пікселях
